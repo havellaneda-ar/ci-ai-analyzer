@@ -35,6 +35,7 @@ def analyze_with_ai(logs):
         json=payload,
         headers=headers
     )
+    print(response.json())  # debug temporal
     return response.json()["choices"][0]["message"]["content"]
 
 if __name__ == "__main__":
