@@ -15,15 +15,19 @@ jobs:
         run: echo "todo bien hasta acá"
 
       - name: Paso que falla
-        run: exit 1
+        id: paso_falla
+        run: |
+          exit 1
+        continue-on-error: true
 
       - name: AI Failure Analysis
-        if: failure()
+        if: steps.paso_falla.outcome == 'failure'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
+          ERROR_MSG: "El paso falló con exit code 1"
         run: |
           pip install requests
           python ci_analyzer.py
