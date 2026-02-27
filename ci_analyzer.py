@@ -1,15 +1,10 @@
 import os
 import requests
 
-def get_logs(run_id, repo):
-    token = os.environ["GITHUB_TOKEN"]
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json"
-    }
-    url = f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/logs"
-    response = requests.get(url, headers=headers, allow_redirects=True)
-    return response.text[:4000]  # limitamos para no pasarnos de tokens
+def get_logs():
+    # Por ahora usamos el mensaje de error directo
+    error = os.environ.get("ERROR_MSG", "Pipeline falló sin mensaje de error")
+    return error
 
 def analyze_with_ai(logs):
     api_key = os.environ["OPENAI_API_KEY"]
@@ -43,8 +38,8 @@ if __name__ == "__main__":
     run_id = os.environ["GITHUB_RUN_ID"]
 
     print("📥 Bajando logs...")
-    logs = get_logs(run_id, repo)
-
+    logs = get_logs()
+    
     print("🤖 Analizando con AI...")
     analysis = analyze_with_ai(logs)
 
