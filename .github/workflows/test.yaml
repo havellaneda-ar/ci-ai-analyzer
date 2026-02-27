@@ -31,3 +31,7 @@ jobs:
         run: |
           pip install requests
           python ci_analyzer.py
+
+      - name: Fail pipeline if build failed
+        if: steps.paso_falla.outcome == 'failure'
+        run: exit 1
